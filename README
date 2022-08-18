@@ -1,4 +1,9 @@
+# README
 
+This repository 
+1. Provides the fortran library and scripts to covert Fortran code to complex-step compatible codes
+2. Redefines numpy functions that are not complex safe
 
+Maintainer: Eirikur Jonsson
 
-# ADD DESCRIPTIONS
+Copyright MDO Lab. 

@@ -1,0 +1,10 @@
+*.DS_Store
+*__pycache__
+*.egg-info
+*.mod
+*.o
+*.so
+*.out
+
+# auto generated files
+config.mk
