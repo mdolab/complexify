@@ -1,22 +1,21 @@
+include ../config.mk
+# This makefile builds the tests
 
-# This makefile is intended to build and run tests
+#F90FLAGS = -Og -fdefault-real-8 -fdefault-double-8
 
-F90FLAGS = -Og -fdefault-real-8 -fdefault-double-8 
+COMPLEXIFY_INCLUDE_FLAGS=-I$(COMPLEXIFY_DIR)/include
+COMPLEXIFY_LINKER_FLAGS=-L$(COMPLEXIFY_DIR)/lib -lcomplexify
 
-all: complex tests
+default:
+#	$(FF90) $(FF90_FLAGS) $(COMPLEXIFY_INCLUDE_FLAGS) -c test_complexify.f90
+#	$(FF90) -lgfortran  $(COMPLEXIFY_INCLUDE_FLAGS) -L. $(COMPLEXIFY_LINKER_FLAGS) -o test_complexify *.o
 
-complex:
-	cd ../src; gfortran $(F90FLAGS) -c complexify.f90
-	mv ../src/*.o .
-	mv ../src/*.mod .    
-    
-tests: complex
-	gfortran $(F90FLAGS) -I../src -c test_complexify.f90
-	gfortran $(F90FLAGS) -o test_complexify *.o 
+	$(FF90) -o test_complexify test_complexify.f90 $(FF90_FLAGS) $(COMPLEXIFY_INCLUDE_FLAGS) $(COMPLEXIFY_LINKER_FLAGS)
+
 
 clean_obj:
-	rm -fr *.o
-	rm -fr *.mod
-    
+	rm -rf *.o
+	rm -rf *.mod
+
 clean: clean_obj
-	rm -f testcomplex
+	rm -rf test_complexify
