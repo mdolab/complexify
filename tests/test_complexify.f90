@@ -15,10 +15,10 @@ module constants
   real(kind=dtype), parameter :: four  = 4.0_dtype
   real(kind=dtype), parameter :: half = one/two
   real(kind=dtype), parameter :: quarter = one/four
-  real(kind=dtype), parameter :: ksrho = 30.0_dtype
   real(kind=dtype), parameter :: meps = 1.11e-16_dtype
+  real(kind=dtype), parameter :: h = 1.e-40_dtype
+  real(kind=dtype), parameter :: eps = 1.e-15_dtype
 end module constants
-
 
 
 subroutine assert(condition, func)
@@ -44,19 +44,15 @@ subroutine assert(condition, func)
 end subroutine assert
 
 
-
 program test_complex
     ! DESCRIPTION
     ! This file will test all complex derivatives
-    
+
     use constants
     use complexify
     implicit none
 
-
     ! Define variables used
-    real(kind=dtype), parameter :: h = 1.e-40
-    real(kind=dtype), parameter :: eps = 1.e-15
     integer, parameter :: n = 5
     logical, parameter :: debug  = .false.
 
@@ -67,7 +63,7 @@ program test_complex
     real(kind=dtype) :: A(n)
     complex(kind=dtype) :: Ac(n)
     integer :: i
-    
+
     ! ------------------------------------------------------------------
     ! y = asin(x)
     ! ------------------------------------------------------------------
@@ -78,30 +74,30 @@ program test_complex
     xc = cmplx(x,h)
     yc = real(asin(xc))
     ycDot = aimag(ASIN(xc))/h
-    
-    
-    call assert(y == yc, "asin value") 
+
+
+    call assert(y == yc, "asin value")
     if (debug) print *, y, yc
     call assert(abs(yDot-ycDot) < eps, "asin derivative")
     if (debug) print *, yDot, ycDot
-    
-    
+
+
     ! ------------------------------------------------------------------
     ! y = maxval(x)
     ! ------------------------------------------------------------------
     A = (/ (i, i = 1, 5) /)
     y = maxval(A)
-    yDot = zero 
-    
+    yDot = zero
+
     Ac = cmplx(A,zero)
     Ac(1) = cmplx(A(1),h)
     yc = real(maxval(Ac))
     ycDot = aimag(maxval(Ac))/h
-    
+
     call assert(y == yc, "maxval value")
     if (debug) print *, y, yc
-    call assert(abs(yDot-ycDot) < eps, "maxval derivative")    
+    call assert(abs(yDot-ycDot) < eps, "maxval derivative")
     if (debug) print *, yDot, ycDot
-        
+
 
 end program test_complex
