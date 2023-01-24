@@ -3,14 +3,15 @@
 Installation
 ============
 
-If one wants to complexify a Fortran code the complexify library needs to be build, and the necessary scripts installed.
-If one is not interested in complexifying a fortran code, but only the complex-safe python function, the building and installing of the library can be omitted.
+If one wants to complexify a Fortran code the complexify library needs to be built, and the necessary scripts installed.
+If one is not interested in complexifying a Fortran code, but only the complex-safe python function, the building and installing of the library can be omitted.
 
 
 Build and installing the complexify Fortran library and scripts
 ---------------------------------------------------------------
 
 Before complexifying a Fortran code one needs to build the `complexify` library that contains the overloaded operations.
+
 First, define the `COMPLEXIFY_DIR` environmental variable in your `.bashrc`.
 This variable defines where the complexify library will be installed.
 In addition, for the library to be loaded properly `LD_LIBRARY_PATH` also needs to be updated.
