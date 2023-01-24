@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from complexify.utils import norm, arctan2, abs
+from complexify.cs_safe import norm, arctan2, abs
 
 
 class TestComplexSafe(unittest.TestCase):
