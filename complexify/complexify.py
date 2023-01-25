@@ -1,107 +1,47 @@
 #!/usr/bin/env python
 
-header_string = """
-     ___________________________________
-    |                                   |
-    |          Complexify 1.3           |
-    |       J.R.R.A.Martins 1999        |
-    |     update July 00 P. Sturdza     |
-    |                                   |
-    |    f'(x) ~  Im [ f(x+ih) ] / h    |
-    |___________________________________|
-
-    Notes:
-      1) Make sure you compile with -r8 flag
-      2) Does not handle f90 free format or f77 tab-format files yet
-      3) Make sure the main routine begins with 'PROGRAM'
-      4) Use 132 column option in compiler
-      5) Command line options:
-         -lucky_logic  -- don't need fixing of .eq. and .ne.
-         -MIPS_logic   -- bug in MIPS pro V7.3 reqiures .ge. fixed too
-         -fudge_format -- dumb fix for format statements
-"""
-
-todo_string = """
-
-  TODO:
-       - overwrite previous c_ files?
-       - problem: reading existing real inp files to complex
-       - f90 type declarations real(8), real(kind=8), < > , etc
-       - recursive / directory option...
-       - look into what float() does to a complex, etc
-
-  other stuff:
-       - comment lines that split up a multiline continued statement
-         may hose everything
-       - adds double parentheses in logical expressions if they were
-         already there before
-       - comments with ! in the middle of logical expression assignments
-         are stripped
-       - multiline intrinsic statements will fail if statement is left
-         blank and other than fixed file format is used
-"""
-
-changes_string = """
-
-Wed Aug  9 21:16:49 PDT 2000:
-- replace MPI_real... with MPI_double_complex
-- exception so that MPI include files, 'mpif.h' are not changed
-- moved fix_intrinsics before fix_real (but before skip comment)
-  reason: after fixing an intrinsic statement starting with real,
-          fix_intrinsics would not work
-- fixed patt_intrinsic, wasn't picking up real*8
-
-Mon Aug 14 19:53:53 PDT 2000:
-- changed explicit cast real() to cmplx()
-"""
-
-import sys, os, glob
+import sys
+import os
+import glob
 import re
+import argparse
 from stat import *
-
-err = sys.stderr.write
-dbg = err
-rep = sys.stdout.write
-fix_relationals = 1
-fudge_format_statement = 0
 
 
 def main():
-    global fix_relationals, fudge_format_statement
-    bad = 0
-    # print(header_string)
-    if not sys.argv[1:]:  # No arguments
-        err(
-            "usage: \n\t"
-            + sys.argv[0]
-            + " [-lucky_logic|-MIPS_logic|-fudge_format] file-pattern \t\n"
-            + "\tpython "
-            + sys.argv[0]
-            + " [-lucky_logic|-MIPS_logic|-fudge_format] file-pattern \n\n"
-        )
-        sys.exit(2)
 
-    for arg in sys.argv[1:]:
-        if arg == "-lucky_logic":
-            # don't attempt to fix .eq. and .ne. (works on PGF90)
-            fix_relationals = 0
-            continue
-        if arg == "-MIPS_logic":
-            # cheap fix for MIPS Pro
-            fix_relationals = 2
-            continue
-        if arg == "-fudge_format":
-            fudge_format_statement = 1
-            continue
-        if os.path.islink(arg):
-            err(arg + ": will not process symbolic links\n")
-            bad = 1
+    parser = argparse.ArgumentParser()
+    parser.add_argument("filePattern", nargs="+", help="One or more files that should be complexified.")
+    parser.add_argument("--fix_relationals", type=str, choices=["lucky_logic", "MIPS_logic"], help="lucky_logic: don't attempt to fix .eq. and .ne. (works on PGF90), MIPS_logic: bug in MIPS pro V7.3 reqiures .ge. fixed too")
+    parser.add_argument("--fudge_format", action="store_true", help="don't attempt to fix .eq. and .ne. (works on PGF90)")
+    args = parser.parse_args()
+
+    fix_relationals = 1
+    if args.fix_relationals == "lucky_logic":
+        # don't attempt to fix .eq. and .ne. (works on PGF90)
+        fix_relationals = 0
+    elif args.fix_relationals == "MIPS_logic":
+        # cheap fix for MIPS Pro
+        fix_relationals = 2
+
+    nFailedFiles = 0
+    for fileName in args.filePattern:
+
+        if os.path.islink(fileName):
+            # Print a to stderr
+            print(f"{fileName} : will not process symbolic links", file=sys.stderr)
+            nFailedFiles = 1
         else:
-            for file in glob.glob(arg):
-                fix_file(file)
-    #    filename = 'c_modifiedFile'
-    # write_module()
-    sys.exit(bad)
+            # Pattern could include a wildcard, so process
+            for file in glob.glob(fileName):
+                nFailedFiles += fix_file(file, fix_relationals, args.fudge_format)
+
+    status = 0
+    if nFailedFiles > 0:
+        print(f"Conversion of {nFailedFiles} files failed. Check logs.")
+        status = 1
+
+    sys.exit(status)
 
 
 # Compile all regular expressions
@@ -190,11 +130,11 @@ def is_fortran(name, root):
         return 0
 
 
-def fix_file(file):
+def fix_file(file, fix_relationals=0, fudge_format_statement=False):
     try:
         f = open(file, "r")
     except IOError as err:
-        print("{} could not be opened: {}".format(file, err))
+        print(f"{file} could not be opened: {err}")
         return 1
 
     # Read file to memory
@@ -214,7 +154,7 @@ def fix_file(file):
 
     if not routine_found:  # include file
         i_line = 0
-        i_line, is_EOF = fix_routine(i_line, lines)
+        i_line, is_EOF = fix_routine(i_line, lines, fix_relationals, fudge_format_statement)
         if is_EOF:
             print("EOF")
     else:  # routine file
@@ -222,21 +162,22 @@ def fix_file(file):
             if i_line >= len(lines):
                 break
             if is_routine(lines[i_line]):
-                i_line, is_EOF = fix_routine(i_line, lines)
+                i_line, is_EOF = fix_routine(i_line, lines, fix_relationals, fudge_format_statement)
                 if is_EOF:
                     break
             i_line = i_line + 1
     write_output(file, lines)
-    return
+
+    return 0
 
 
-def fix_routine(i_line, lines):
+def fix_routine(i_line, lines, fix_relationals, fudge_format_statement):
     # process one routine (until another routine is found)
 
     is_EOF = 0
     implicit_found = 0
     # fix type declaration of functions
-    newline, implicit_found = fix_line(lines[i_line], implicit_found)
+    newline, implicit_found = fix_line(lines[i_line], implicit_found, fix_relationals, fudge_format_statement)
     if newline != lines[i_line]:
         lines[i_line] = newline
 
@@ -254,7 +195,7 @@ def fix_routine(i_line, lines):
         if is_routine(lines[i_line]):
             i_line = i_line - 1
             break
-        newline, implicit_found = fix_line(lines[i_line], implicit_found)
+        newline, implicit_found = fix_line(lines[i_line], implicit_found, fix_relationals, fudge_format_statement)
         # newline=lines[i_line]
         if newline != lines[i_line]:
             # rep(str(i_line-1) + '\n')
@@ -323,7 +264,7 @@ def join_lines(i, lines):
     return lines
 
 
-def fix_line(line, implicit_found):
+def fix_line(line, implicit_found, fix_relationals, fudge_format_statement):
 
     # skip commented lines
     if patt_comment.search(line) != None:
@@ -603,4 +544,7 @@ use_module_line = "       use complexify \n"
 
 # use_module_line = " "
 implicit_complex_line = " "
-main()
+
+
+if __name__ == "__main__":
+    main()
