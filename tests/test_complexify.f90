@@ -2,6 +2,7 @@ module precision
     ! A module to handle setting the data type for the real/complex analysis
     integer, parameter :: dtype = selected_real_kind(p=12, r=200)
 end module precision
+
 module constants
     ! A module that defines constants for later useage
     use precision

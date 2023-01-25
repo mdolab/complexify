@@ -5,7 +5,8 @@ Parts are adapted from https://github.com/OpenMDAO/OpenMDAO/blob/master/openmdao
 
 import numpy as np
 
-def abs(x):
+
+def abs(x):  # noqa: A001
     """
     complex-step safe version of numpy.abs function.
     Parameters
