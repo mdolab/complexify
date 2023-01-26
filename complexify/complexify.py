@@ -5,7 +5,6 @@ import os
 import glob
 import re
 import argparse
-from stat import *
 
 
 def main():
@@ -38,7 +37,7 @@ def main():
 
     status = 0
     if nFailedFiles > 0:
-        print(f"Conversion of {nFailedFiles} files failed. Check logs.")
+        print(f"Conversion of {nFailedFiles} files failed. Check output.")
         status = 1
 
     sys.exit(status)
@@ -93,44 +92,9 @@ patt_blankline = re.compile(r"^\s*$")
 patt_sumpi = re.compile(".*/SU_MPI/.*")
 
 
-def is_fortran(name, root):
-    # Do not process 'complexify.f90'
-    if name == "complexify.f90":
-        return 0
-    # Do not process SU_MPI stuff
-    if patt_sumpi.match(root):
-        return 0
-    # Hack for ADflow: do not process 'precision.F90'
-    if name == "precision.F90":
-        return 0
-    if name == "dummy_mpi.f90":
-        return 0  # hack for pywarp
-    if name == "su_mpi.F90":
-        return 0
-    if name == "adtPrecision.F90":
-        return 0
-    if name == "determine_size_entity.F90":
-        return 0
-    # TODO: use one regex instead
-    if name[:2] == "._":
-        return 0  # emacs backup files
-    if name[-4:] == ".f90":
-        return 1
-    elif name[-4:] == ".F90":
-        return 1
-    elif name[-2:] == ".f":
-        return 1
-    elif name[-2:] == ".F":
-        return 1
-    elif name[-2:] == ".h":
-        return 1  # .h files as well?
-    elif name[-4:] == ".pyf":
-        return 1  # signiture files!!
-    else:
-        return 0
-
-
 def fix_file(file, fix_relationals=0, fudge_format_statement=False):
+    """Process one file at a time"""
+
     try:
         f = open(file, "r")
     except IOError as err:
@@ -172,7 +136,7 @@ def fix_file(file, fix_relationals=0, fudge_format_statement=False):
 
 
 def fix_routine(i_line, lines, fix_relationals, fudge_format_statement):
-    # process one routine (until another routine is found)
+    """Process one routine (until another routine is found)"""
 
     is_EOF = 0
     implicit_found = 0
@@ -211,16 +175,14 @@ def fix_routine(i_line, lines, fix_relationals, fudge_format_statement):
 
 
 def write_output(filename, lines):
-    # Write to output file
+    """Write to output file"""
     head, tail = os.path.split(filename)
-    # newname = "newFile"
     newname = os.path.join(head, "c_" + tail)
 
     try:
         g = open(newname, "w")
     except IOError as err:
-        f.close()
-        print("{} could not be opened: {}".format(newname, err))
+        print(f"{newname} could not be opened: {err}")
         return 1
     for line in lines:
         g.write(line)
@@ -266,19 +228,19 @@ def join_lines(i, lines):
 
 def fix_line(line, implicit_found, fix_relationals, fudge_format_statement):
 
-    # skip commented lines
+    # Skip commented lines
     if patt_comment.search(line) != None:
         return (line, implicit_found)
 
-    # CHeck if we should keep the line.
+    # Check if we should keep the line.
     if patt_always_real.match(line):
         return (line, implicit_found)
 
-    # CHeck if we should keep the line.
+    # Check if we should keep the line.
     if patt_cgns_real.match(line):
         return (line, implicit_found)
 
-    # check if other lines need to be fixed
+    # Check if other lines need to be fixed
     if patt_real.match(line) != None:
         line = fix_real(line)
 
@@ -507,12 +469,12 @@ def type_repl(match):
     if precision == None:
         precision = "4"
     if eval(precision) == 8:
-        type = "complex*16"  # double precision complex
+        data_type = "complex*16"  # double precision complex
     elif eval(precision) == 4:
-        type = "complex"
+        data_type = "complex"
     else:
-        err("Uknown precision: ", precision)
-    return type
+        print(f"Unknown precision: {precision}", file=sys.stderr)
+    return data_type
 
 
 def skip_continuation(i, lines):
@@ -541,8 +503,6 @@ def skip_continuation(i, lines):
 
 
 use_module_line = "       use complexify \n"
-
-# use_module_line = " "
 implicit_complex_line = " "
 
 
