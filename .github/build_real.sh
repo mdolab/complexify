@@ -11,4 +11,4 @@ fi
 cp $CONFIG_FILE config/config.mk
 make
 make install
-pip install .
+pip install .[testing]
