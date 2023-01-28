@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from complexify.cs_safe import norm, arctan2, abs
+from complexify import cs_safe
 
 
 class TestComplexSafe(unittest.TestCase):
@@ -27,7 +27,7 @@ class TestComplexSafe(unittest.TestCase):
         aCS = np.zeros_like(self.a, dtype=np.complex128)
         aCS[:] = self.a.copy()
         aCS[0] += 1.0j * self.hCS
-        unitCS = np.imag(aCS / norm(aCS)) / self.hCS
+        unitCS = np.imag(aCS / cs_safe.norm(aCS)) / self.hCS
 
         np.testing.assert_allclose(unitCS, unitFD, rtol=1e-6)
 
@@ -41,7 +41,7 @@ class TestComplexSafe(unittest.TestCase):
         aCS = np.zeros_like(self.a, dtype=np.complex128)
         aCS[:] = self.a.copy()
         aCS[0] += 1.0j * self.hCS
-        arctan2CS = np.imag(arctan2(self.b, aCS)) / self.hCS
+        arctan2CS = np.imag(cs_safe.arctan2(self.b, aCS)) / self.hCS
 
         np.testing.assert_allclose(arctan2CS, arctan2FD, rtol=1e-6)
 
@@ -55,9 +55,28 @@ class TestComplexSafe(unittest.TestCase):
         aCS = np.zeros_like(self.a, dtype=np.complex128)
         aCS[:] = self.a.copy()
         aCS[0] += 1.0j * self.hCS
-        absCS = np.imag(abs(aCS)) / self.hCS
+        absCS = np.imag(cs_safe.abs(aCS)) / self.hCS
 
         np.testing.assert_allclose(absCS, absFD, rtol=1e-6)
+
+    def test_mean_std(self):
+        # Compute the FD reference
+        aFD = self.a.copy()
+        aFD[0] += self.hFD
+        absFD = (np.std(aFD) - np.std(self.a)) / self.hFD
+
+        # Compute CS
+        aCS = np.zeros_like(self.a, dtype=np.complex128)
+        aCS[:] = self.a.copy()
+        aCS[0] += 1.0j * self.hCS
+        absCS = np.imag(cs_safe.std(aCS)) / self.hCS
+
+        np.testing.assert_allclose(absCS, absFD, rtol=1e-5)
+
+        # test mean_std
+        m, s = cs_safe.mean_std(self.a)
+        np.testing.assert_allclose(m, np.mean(self.a), rtol=1e-6)
+        np.testing.assert_allclose(s, np.std(self.a), rtol=1e-6)
 
 
 if __name__ == "__main__":
