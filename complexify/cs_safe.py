@@ -63,3 +63,41 @@ def arctan2(y, x):
     else:
         return np.arctan2(y, x)
 
+
+def mean_std(x):
+    """
+    A function to compute mean and standard deviation of a numpy array.
+
+    Parameters
+    ----------
+    x : ndarray
+        The array of sampled values
+
+    Returns
+    -------
+    mean
+        The mean value of the input array
+    stdev
+        The standard deviation of the input array
+    """
+    mean = np.mean(x)
+    std = np.sqrt(np.mean((x - mean) ** 2))
+    return mean, std
+
+
+def std(x):
+    """
+    A function to compute the standard deviation of a numpy array.
+
+    Parameters
+    ----------
+    x : ndarray
+        The array of sampled values
+
+    Returns
+    -------
+    stdev
+        The standard deviation of the input array
+    """
+    std = np.sqrt(np.mean((x - np.mean(x)) ** 2))
+    return std

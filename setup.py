@@ -16,4 +16,7 @@ setup(
     install_requires=["numpy>=1.16"],
     classifiers=["Operating System :: Linux", "Programming Language :: Python, Fortran"],
     entry_points={"console_scripts": ["complexify = complexify.complexify:main"]},
+    extras_require={
+        "testing": ["parameterized", "testflo"],
+    },
 )
