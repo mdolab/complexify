@@ -1,5 +1,5 @@
 import numpy as np
-from complexify.utils import norm  #, abs, arctan2
+from complexify.cs_safe import norm
 
 # Compute the FD reference
 a = np.array([3.0, -10.0, 2.0], dtype=np.float)
