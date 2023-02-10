@@ -7,12 +7,14 @@ import re
 import argparse
 
 
+
 def main():
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="Complexify one or more fortran files. By default the complexified file is written to the same directory as the input files with a 'c_' prefix.")
     parser.add_argument("filePattern", nargs="+", help="One or more files that should be complexified.")
     parser.add_argument("--fix_relationals", type=str, choices=["lucky_logic", "MIPS_logic"], help="lucky_logic: don't attempt to fix .eq. and .ne. (works on PGF90), MIPS_logic: bug in MIPS pro V7.3 reqiures .ge. fixed too")
     parser.add_argument("--fudge_format", action="store_true", help="don't attempt to fix .eq. and .ne. (works on PGF90)")
+    parser.add_argument("-o", "--outFileName", type=str, default=None, help="The complexified filename (and path if desired). Note: This is only allowed for a single input file.")
     args = parser.parse_args()
 
     fix_relationals = 1
@@ -22,6 +24,10 @@ def main():
     elif args.fix_relationals == "MIPS_logic":
         # cheap fix for MIPS Pro
         fix_relationals = 2
+
+    if len(args.filePattern) > 1 and args.outFileName is not None:
+        print(f"outFileName cannot be used with more than one input argument, {len(args.filePattern)} given. Check input.")
+        sys.exit(1)
 
     nFailedFiles = 0
     for fileName in args.filePattern:
@@ -33,7 +39,7 @@ def main():
         else:
             # Pattern could include a wildcard, so process
             for file in glob.glob(fileName):
-                nFailedFiles += fix_file(file, fix_relationals, args.fudge_format)
+                nFailedFiles += fix_file(file, fix_relationals, args.fudge_format, args.outFileName)
 
     status = 0
     if nFailedFiles > 0:
@@ -92,7 +98,7 @@ patt_blankline = re.compile(r"^\s*$")
 patt_sumpi = re.compile(".*/SU_MPI/.*")
 
 
-def fix_file(file, fix_relationals=0, fudge_format_statement=False):
+def fix_file(file, fix_relationals=0, fudge_format_statement=False, outFileName=None):
     """Process one file at a time"""
 
     try:
@@ -130,9 +136,8 @@ def fix_file(file, fix_relationals=0, fudge_format_statement=False):
                 if is_EOF:
                     break
             i_line = i_line + 1
-    write_output(file, lines)
 
-    return 0
+    return write_output(file, lines, outFileName)
 
 
 def fix_routine(i_line, lines, fix_relationals, fudge_format_statement):
@@ -174,10 +179,14 @@ def fix_routine(i_line, lines, fix_relationals, fudge_format_statement):
     return i_line, is_EOF
 
 
-def write_output(filename, lines):
+def write_output(filename, lines, outFileName):
     """Write to output file"""
+
     head, tail = os.path.split(filename)
     newname = os.path.join(head, "c_" + tail)
+
+    if outFileName is not None:
+        newname = outFileName
 
     try:
         g = open(newname, "w")
@@ -187,7 +196,7 @@ def write_output(filename, lines):
     for line in lines:
         g.write(line)
     g.close()
-    return
+    return 0
 
 
 def is_routine(line):
