@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from complexify import cs_safe
+from complexify import cs
 from parameterized import parameterized
 
 
@@ -24,20 +24,20 @@ class TestComplexSafe(unittest.TestCase):
 
     def test_mean_std(self):
         # test mean_std
-        m, s = cs_safe.mean_std(self.a)
+        m, s = cs.mean_std(self.a)
         np.testing.assert_allclose(m, np.mean(self.a), rtol=1e-6)
         np.testing.assert_allclose(s, np.std(self.a), rtol=1e-6)
 
     @parameterized.expand(
         [
-            (cs_safe.norm, np.linalg.norm, 1e-6),
-            (cs_safe.arctan2, np.arctan2, 1e-6),
-            (cs_safe.abs, np.abs, 1e-6),
-            (cs_safe.std, np.std, 1e-5),
+            (cs.norm, np.linalg.norm, 1e-6),
+            (cs.arctan2, np.arctan2, 1e-6),
+            (cs.abs, np.abs, 1e-6),
+            (cs.std, np.std, 1e-5),
         ]
     )
     def test_functions(self, cs_func, np_func, rtol):
-        if cs_func == cs_safe.arctan2:
+        if cs_func == cs.arctan2:
             args = ((self.b, self.aFD), (self.b, self.a), (self.b, self.aCS))
         else:
             args = ((self.aFD,), (self.a,), (self.aCS,))
