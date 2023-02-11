@@ -1,4 +1,4 @@
-.. _api:
+.. _complexify_api:
 
 API
 ===
