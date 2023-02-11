@@ -9,10 +9,12 @@ import numpy as np
 def abs(x):  # noqa: A001
     """
     complex-step safe version of numpy.abs function.
+
     Parameters
     ----------
     x : ndarray
         array value to be computed on
+
     Returns
     -------
     ndarray
@@ -27,12 +29,14 @@ def abs(x):  # noqa: A001
 def norm(x, axis=None):
     """
     complex-step safe version of numpy.linalg.norm function.
+
     Parameters
     ----------
     x : ndarray
         array value to be computed on
     axis : None or int
         axis to perform the norm up to
+
     Returns
     -------
     ndarray
@@ -43,12 +47,14 @@ def norm(x, axis=None):
 def arctan2(y, x):
     """
     Numpy-compatible, complex-compatible arctan2 function for use with complex-step.
+
     Parameters
     ----------
     y : float or complex
         The length of the side opposite the angle being determined.
     x : float or complex
         The length of the side adjacent to the angle being determined.
+
     Returns
     -------
     ndarray
