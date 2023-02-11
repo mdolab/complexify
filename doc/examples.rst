@@ -3,4 +3,4 @@
 Examples
 ========
 
-To be added
+Please see the ``examples`` directory.

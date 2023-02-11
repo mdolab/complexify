@@ -11,10 +11,10 @@ Complexify
 
 `Complexify` serves two purposes:
 
-   #. Provides a Fortran library and scripts to covert Fortran code to complex-step compatible code.
-   #. Provides complex safe numpy functions that can be imported into your python code.
+   #. Provides a :ref:`Fortran library<complexify_library>` and scripts to covert Fortran code to complex-step compatible code.
+   #. Provides :ref:`complex safe numpy functions<complexify_module>` that can be imported into your python code.
 
-Source code is available on `GitHub <https://github.com/mdolab/complexify>`__
+Source code is available on `GitHub <https://github.com/mdolab/complexify>`__.
 
 
 Background
@@ -40,7 +40,6 @@ Further details are available in the materials referenced below and in the `comp
 .. toctree::
    :maxdepth: 2
 
-   installation
-   examples
+   library
+   module
    citation
-   API
