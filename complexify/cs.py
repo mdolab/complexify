@@ -1,5 +1,5 @@
 """
-Collection of complex-step safe functions to replace standard numpy operations.
+Collection of complex-step safe functions to replace standard Numpy operations.
 Parts are adapted from https://github.com/OpenMDAO/OpenMDAO/blob/master/openmdao/utils/cs_safe.py
 """
 

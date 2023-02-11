@@ -43,3 +43,4 @@ Further details are available in the materials referenced below and in the `comp
    installation
    examples
    citation
+   API
