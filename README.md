@@ -29,7 +29,6 @@ The Complex-Step Derivative Approximation
     volume      = {29},
     year        = {2003}
 }
-
-Maintainer: Eirikur Jonsson
+```
 
 Copyright MDO Lab.
