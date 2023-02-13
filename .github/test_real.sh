@@ -14,4 +14,4 @@ make
 ./test_complexify
 
 # Test python includes (disabled for now)
-#testflo -v -n 1 --coverage --coverpkg complexify
+testflo -v -n 1 --coverage --coverpkg complexify
