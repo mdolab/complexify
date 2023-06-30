@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-cd tests
 
 # Export variables to make sure they are present for build.
 # The user should define them beforehand.
@@ -10,8 +9,9 @@ if [[ -z "$COMPLEXIFY_DIR" ]]; then
 fi
 
 # Test the fortran library
+cd tests
 make
 ./test_complexify
 
-# Test python includes (disabled for now)
+# Test python includes
 testflo -v -n 1 --coverage --coverpkg complexify
