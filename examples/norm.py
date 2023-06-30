@@ -16,8 +16,8 @@ unit_fd = (a_copy / np.linalg.norm(a_copy) - a / np.linalg.norm(a)) / h
 obj_fd = (np.linalg.norm(a_copy) * np.linalg.norm(b) - np.linalg.norm(a) * np.linalg.norm(b)) / h
 
 # Compute CS
-h = 1.e-20
-a = np.array([3.+h*1j, -10.0, 2.0], dtype=np.complex128)
+h = 1.0e-20
+a = np.array([3.0 + h * 1j, -10.0, 2.0], dtype=np.complex128)
 b = np.array([1.0, 4.0, -5.0], dtype=np.complex128)
 
 # EX1
@@ -33,4 +33,3 @@ obj_cs = cs.norm(a) * cs.norm(b)
 print("FD obj:", obj_fd)
 print("CS obj wrong:", np.imag(obj_cs_wrong / h))
 print("CS obj right:", np.imag(obj_cs / h))
-
