@@ -653,6 +653,11 @@ contains
                       sign(-two, -one), msg="func sign_cc(--,--)")
 
         ! Test derivative
+        ! If the real components are the same sign, the result's imaginary component will be
+        ! equal to val1's imaginary component.
+        ! Otherwise, the result's imaginary component will be val1's imaginary component
+        ! with the opposite sign.
+
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(two, four), cmplx(one, one))), &
                       four * (two * one) / abs(two * one), msg="sens sign_cc(++,++)")
