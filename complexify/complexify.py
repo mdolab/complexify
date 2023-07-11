@@ -7,14 +7,27 @@ import re
 import argparse
 
 
-
 def main():
-
-    parser = argparse.ArgumentParser(description="Complexify one or more fortran files. By default the complexified file is written to the same directory as the input files with a 'c_' prefix.")
+    parser = argparse.ArgumentParser(
+        description="Complexify one or more fortran files. By default the complexified file is written to the same directory as the input files with a 'c_' prefix."
+    )
     parser.add_argument("filePattern", nargs="+", help="One or more files that should be complexified.")
-    parser.add_argument("--fix_relationals", type=str, choices=["lucky_logic", "MIPS_logic"], help="lucky_logic: don't attempt to fix .eq. and .ne. (works on PGF90), MIPS_logic: bug in MIPS pro V7.3 reqiures .ge. fixed too")
-    parser.add_argument("--fudge_format", action="store_true", help="don't attempt to fix .eq. and .ne. (works on PGF90)")
-    parser.add_argument("-o", "--outFileName", type=str, default=None, help="The complexified filename (and path if desired). Note: This is only allowed for a single input file.")
+    parser.add_argument(
+        "--fix_relationals",
+        type=str,
+        choices=["lucky_logic", "MIPS_logic"],
+        help="lucky_logic: don't attempt to fix .eq. and .ne. (works on PGF90), MIPS_logic: bug in MIPS pro V7.3 reqiures .ge. fixed too",
+    )
+    parser.add_argument(
+        "--fudge_format", action="store_true", help="don't attempt to fix .eq. and .ne. (works on PGF90)"
+    )
+    parser.add_argument(
+        "-o",
+        "--outFileName",
+        type=str,
+        default=None,
+        help="The complexified filename (and path if desired). Note: This is only allowed for a single input file.",
+    )
     args = parser.parse_args()
 
     fix_relationals = 1
@@ -26,12 +39,13 @@ def main():
         fix_relationals = 2
 
     if len(args.filePattern) > 1 and args.outFileName is not None:
-        print(f"outFileName cannot be used with more than one input argument, {len(args.filePattern)} given. Check input.")
+        print(
+            f"outFileName cannot be used with more than one input argument, {len(args.filePattern)} given. Check input."
+        )
         sys.exit(1)
 
     nFailedFiles = 0
     for fileName in args.filePattern:
-
         if os.path.islink(fileName):
             # Print a to stderr
             print(f"{fileName} : will not process symbolic links", file=sys.stderr)
@@ -236,9 +250,8 @@ def join_lines(i, lines):
 
 
 def fix_line(line, implicit_found, fix_relationals, fudge_format_statement):
-
     # Skip commented lines
-    if patt_comment.search(line) != None:
+    if patt_comment.search(line) is not None:
         return (line, implicit_found)
 
     # Check if we should keep the line.
@@ -250,49 +263,49 @@ def fix_line(line, implicit_found, fix_relationals, fudge_format_statement):
         return (line, implicit_found)
 
     # Check if other lines need to be fixed
-    if patt_real.match(line) != None:
+    if patt_real.match(line) is not None:
         line = fix_real(line)
 
     ######################
-    # if patt_realtype_s.search(line) != None: line = fix_realtype(line)
+    # if patt_realtype_s.search(line) is not None: line = fix_realtype(line)
     # else: print( patt_realtype_s.search(line))
     ######################
 
-    if patt_double.match(line) != None:
+    if patt_double.match(line) is not None:
         line = fix_double(line)
 
-    if patt_implicit.match(line) != None:
+    if patt_implicit.match(line) is not None:
         implicit_found = 1
         line = fix_implicit(line)
 
-    ###if patt_inc.match(line) != None: line = fix_inc(line)
+    # if patt_inc.match(line) is not None: line = fix_inc(line)
     if fix_relationals:
-        if patt_eq.search(line) != None:
+        if patt_eq.search(line) is not None:
             line = patt_eq.sub(r".ceq.", line)
-        if patt_ne.search(line) != None:
+        if patt_ne.search(line) is not None:
             line = patt_ne.sub(r".cne.", line)
 
     if fix_relationals == 2:  # only for MIPS Pro compiler
-        if patt_ge.search(line) != None:
+        if patt_ge.search(line) is not None:
             line = patt_ge.sub(r".cge.", line)
 
-    if patt_if.match(line) != None:
+    if patt_if.match(line) is not None:
         line = fix_if(line)
-    elif patt_logic_assignment.match(line) != None:
+    elif patt_logic_assignment.match(line) is not None:
         line = fix_logic_assignment(line)
 
-    if patt_intrinsic.match(line) != None:
+    if patt_intrinsic.match(line) is not None:
         line = fix_intrinsics(line)
 
-    if patt_mpi_stuff.search(line) != None:
+    if patt_mpi_stuff.search(line) is not None:
         line = fix_mpi_stuff(line)
 
     # Assume that this is not needed: CHECK
     # if patt_real_cast.search(line) != None: line = fix_real_cast(line)
     if fudge_format_statement:
-        if patt_format.match(line) != None:
+        if patt_format.match(line) is not None:
             line = fudge_format(line)
-        if patt_write.search(line) != None:
+        if patt_write.search(line) is not None:
             line = fudge_format(line)
 
     return (line, implicit_found)
@@ -475,7 +488,7 @@ def fix_intrinsics(line):
 
 def type_repl(match):
     precision = match.group(1)
-    if precision == None:
+    if precision is None:
         precision = "4"
     if eval(precision) == 8:
         data_type = "complex*16"  # double precision complex

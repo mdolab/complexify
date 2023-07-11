@@ -7,7 +7,6 @@ from parameterized import parameterized
 
 class TestComplexSafe(unittest.TestCase):
     def setUp(self):
-
         # Generate random arrays with a fixed seed
         np.random.seed(3)
         self.a = np.random.rand(5)

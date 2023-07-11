@@ -9,7 +9,7 @@ INSTALL_DIR = $(COMPLEXIFY_DIR)
 FF90 = ifort
 
 # ------- Define compiler flags ----------------------------------------
-FF90_FLAGS = -fPIC -O2 -fdefault-real-8 -std=f2008
+FF90_FLAGS = -fPIC -O2 -r8 -stand f08
 
 # ------- Define linker flags ------------------------------------------
 LINKER_FLAGS = -fPIC
