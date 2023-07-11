@@ -655,51 +655,51 @@ contains
         ! Test derivative
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(two, four), cmplx(one, one))), &
-                      sign(four, one), msg="sens sign_cc(++,++)")
+                      four * (two * one) / abs(two * one), msg="sens sign_cc(++,++)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(two, four), cmplx(-one, one))), &
-                      sign(four, -one), msg="sens sign_cc(++,-+)")
+                      four * (two * (-one)) / abs(two * (-one)), msg="sens sign_cc(++,-+)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(two, four), cmplx(one, -one))), &
-                      sign(four, one), msg="sens sign_cc(++,-+)")
+                      four * (two * one) / abs(two * one), msg="sens sign_cc(++,-+)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(two, four), cmplx(-one, -one))), &
-                      sign(four, -one), msg="sens sign_cc(++,--)")
+                      four * (two * (-one)) / abs(two * (-one)), msg="sens sign_cc(++,--)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(-two, four), cmplx(one, one))), &
-                      sign(four, one), msg="sens sign_cc(-+,++)")
+                      four * (-two * one) / abs(-two * one), msg="sens sign_cc(-+,++)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(-two, four), cmplx(-one, one))), &
-                      sign(four, -one), msg="sens sign_cc(-+,-+)")
+                      four * (-two * (-one)) / abs(-two * (-one)), msg="sens sign_cc(-+,-+)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(-two, four), cmplx(one, -one))), &
-                      sign(four, one), msg="sens sign_cc(-+,-+)")
+                      four * (-two * one) / abs(-two * one), msg="sens sign_cc(-+,-+)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(-two, four), cmplx(-one, -one))), &
-                      sign(four, -one), msg="sens sign_cc(-+,--)")
+                      four * (-two * (-one)) / abs(-two * (-one)), msg="sens sign_cc(-+,--)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(-two, -four), cmplx(one, one))), &
-                      sign(-four, one), msg="sens sign_cc(--,++)")
+                      -four * (-two * one) / abs(-two * one), msg="sens sign_cc(--,++)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(-two, -four), cmplx(-one, one))), &
-                      sign(-four, -one), msg="sens sign_cc(--,-+)")
+                      -four * (-two * (-one)) / abs(-two * (-one)), msg="sens sign_cc(--,-+)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(-two, -four), cmplx(one, -one))), &
-                      sign(-four, one), msg="sens sign_cc(--,-+)")
+                      -four * (-two * one) / abs(-two * one), msg="sens sign_cc(--,-+)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(-two, -four), cmplx(-one, -one))), &
-                      sign(-four, -one), msg="sens sign_cc(--,--)")
+                      -four * (-two * (-one)) / abs(-two * (-one)), msg="sens sign_cc(--,--)")
 
         ! TODO --- sign_cca ---
         ! TODO --- sign_cr ---
@@ -948,7 +948,7 @@ program test_complexify
     call test_min()
     call test_minval()
     call test_maxval()
-    ! call test_sign() Disabling since tests are failing. Need to identify if tests are incorrect or library implementation.
+    call test_sign()
     call test_dim()
     call test_log10()
     call test_nint()
