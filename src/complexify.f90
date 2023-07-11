@@ -545,7 +545,9 @@ contains
     complex(kind=8) function sign_cc(val1, val2)
         complex(kind=8), intent(in) :: val1, val2
         real(kind=8) sign
-        if (real(val2) < 0.) then
+        if (real(val2) < 0. .and. real(val1) > 0.) then
+            sign = -1.
+        else if (real(val2) > 0. .and. real(val1) < 0.) then
             sign = -1.
         else
             sign = 1.
@@ -561,7 +563,9 @@ contains
         integer i, n
         n = size(val2)
         do i = 1, n
-            if (real(val2(i)) < 0.) then
+            if (real(val2(i)) < 0. .and. real(val1) > 0.) then
+                sign = -1.
+            else if (real(val2(i)) > 0. .and. real(val1) < 0.) then
                 sign = -1.
             else
                 sign = 1.
@@ -574,7 +578,9 @@ contains
         complex(kind=8), intent(in) :: val1
         real(kind=8), intent(in) :: val2
         real(kind=8) sign
-        if (real(val2) < 0.) then
+        if (real(val2) < 0. .and. real(val1) > 0.) then
+            sign = -1.
+        else if (real(val2) > 0. .and. real(val1) < 0.) then
             sign = -1.
         else
             sign = 1.
@@ -586,7 +592,9 @@ contains
         real(kind=8), intent(in) :: val1
         complex(kind=8), intent(in) :: val2
         real(kind=8) sign
-        if (real(val2) < 0.) then
+        if (real(val2) < 0. .and. real(val1) > 0.) then
+            sign = -1.
+        else if (real(val2) > 0. .and. real(val1) < 0.) then
             sign = -1.
         else
             sign = 1.
