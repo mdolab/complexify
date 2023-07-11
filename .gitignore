@@ -8,3 +8,6 @@
 
 # auto generated files
 config.mk
+
+# compiled tests
+tests/test_complexify
