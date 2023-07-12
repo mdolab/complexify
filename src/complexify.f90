@@ -550,7 +550,7 @@ contains
         else
             sign = 1.
         end if
-        sign_cc = sign * val1
+        sign_cc = sign * abs_c(val1)
         return
     end function sign_cc
     function sign_cca(val1, val2) ! NEW, not verified
@@ -561,12 +561,7 @@ contains
         integer i, n
         n = size(val2)
         do i = 1, n
-            if (real(val2(i)) < 0.) then
-                sign = -1.
-            else
-                sign = 1.
-            end if
-            sign_cca(i) = sign * val1
+            sign_cca(i) = sign_cc(val1, val2(i))
         end do
         return
     end function sign_cca
@@ -579,7 +574,7 @@ contains
         else
             sign = 1.
         end if
-        sign_cr = sign * val1
+        sign_cr = sign * abs_c(val1)
         return
     end function sign_cr
     complex(kind=8) function sign_rc(val1, val2)
@@ -591,7 +586,7 @@ contains
         else
             sign = 1.
         end if
-        sign_rc = sign * val1
+        sign_rc = sign * abs(val1)
         return
     end function sign_rc
 

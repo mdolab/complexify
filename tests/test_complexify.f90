@@ -653,53 +653,58 @@ contains
                       sign(-two, -one), msg="func sign_cc(--,--)")
 
         ! Test derivative
+        ! If the real components are the same sign, the result's imaginary component will be
+        ! equal to val1's imaginary component.
+        ! Otherwise, the result's imaginary component will be val1's imaginary component
+        ! with the opposite sign.
+
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(two, four), cmplx(one, one))), &
-                      sign(four, one), msg="sens sign_cc(++,++)")
+                      four * (two * one) / abs(two * one), msg="sens sign_cc(++,++)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(two, four), cmplx(-one, one))), &
-                      sign(four, -one), msg="sens sign_cc(++,-+)")
+                      four * (two * (-one)) / abs(two * (-one)), msg="sens sign_cc(++,-+)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(two, four), cmplx(one, -one))), &
-                      sign(four, one), msg="sens sign_cc(++,-+)")
+                      four * (two * one) / abs(two * one), msg="sens sign_cc(++,-+)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(two, four), cmplx(-one, -one))), &
-                      sign(four, -one), msg="sens sign_cc(++,--)")
+                      four * (two * (-one)) / abs(two * (-one)), msg="sens sign_cc(++,--)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(-two, four), cmplx(one, one))), &
-                      sign(four, one), msg="sens sign_cc(-+,++)")
+                      four * (-two * one) / abs(-two * one), msg="sens sign_cc(-+,++)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(-two, four), cmplx(-one, one))), &
-                      sign(four, -one), msg="sens sign_cc(-+,-+)")
+                      four * (-two * (-one)) / abs(-two * (-one)), msg="sens sign_cc(-+,-+)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(-two, four), cmplx(one, -one))), &
-                      sign(four, one), msg="sens sign_cc(-+,-+)")
+                      four * (-two * one) / abs(-two * one), msg="sens sign_cc(-+,-+)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(-two, four), cmplx(-one, -one))), &
-                      sign(four, -one), msg="sens sign_cc(-+,--)")
+                      four * (-two * (-one)) / abs(-two * (-one)), msg="sens sign_cc(-+,--)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(-two, -four), cmplx(one, one))), &
-                      sign(-four, one), msg="sens sign_cc(--,++)")
+                      -four * (-two * one) / abs(-two * one), msg="sens sign_cc(--,++)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(-two, -four), cmplx(-one, one))), &
-                      sign(-four, -one), msg="sens sign_cc(--,-+)")
+                      -four * (-two * (-one)) / abs(-two * (-one)), msg="sens sign_cc(--,-+)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(-two, -four), cmplx(one, -one))), &
-                      sign(-four, one), msg="sens sign_cc(--,-+)")
+                      -four * (-two * one) / abs(-two * one), msg="sens sign_cc(--,-+)")
 
         test_result = assert_isclose_wrap( &
                       aimag(sign(cmplx(-two, -four), cmplx(-one, -one))), &
-                      sign(-four, -one), msg="sens sign_cc(--,--)")
+                      -four * (-two * (-one)) / abs(-two * (-one)), msg="sens sign_cc(--,--)")
 
         ! TODO --- sign_cca ---
         ! TODO --- sign_cr ---
@@ -948,7 +953,7 @@ program test_complexify
     call test_min()
     call test_minval()
     call test_maxval()
-    ! call test_sign() Disabling since tests are failing. Need to identify if tests are incorrect or library implementation.
+    call test_sign()
     call test_dim()
     call test_log10()
     call test_nint()
