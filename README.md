@@ -1,6 +1,7 @@
 # README
 [![Build Status](https://dev.azure.com/mdolab/Public/_apis/build/status%2Fmdolab.complexify?repoName=mdolab%2Fcomplexify&branchName=main)](https://dev.azure.com/mdolab/Public/_build/latest?definitionId=48&repoName=mdolab%2Fcomplexify&branchName=main)
-[![Documentation Status](https://readthedocs.com/projects/mdolab-complexify/badge/?version=latest&token=233c006aa12bcfaf98c6ebad121dda12e4165560d0de69aafc464eb5a8e59555)](https://mdolab-complexify.readthedocs-hosted.com/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.com/projects/mdolab-complexify/badge/?version=latest)](https://mdolab-complexify.readthedocs-hosted.com/en/latest/?badge=latest)
+
 
 The complex-step is a method for estimating derivatives.
 
