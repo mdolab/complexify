@@ -23,7 +23,7 @@ setup(
     url="https://github.com/mdolab/complexify",
     license="Apache License Version 2.0",
     packages=["complexify"],
-    install_requires=["numpy>=1.16"],
+    install_requires=["numpy>=1.21"],
     classifiers=["Operating System :: Linux", "Programming Language :: Python, Fortran"],
     entry_points={"console_scripts": ["complexify = complexify.complexify:main"]},
     extras_require={
