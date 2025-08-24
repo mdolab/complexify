@@ -64,6 +64,3 @@ Next, in the case of a Makefile, one can define the following variables that can
     # ------- Define complexify inlcude and linker flags -------------------------
     COMPLEXIFY_INCLUDE_FLAGS=-I$(COMPLEXIFY_DIR)/include
     COMPLEXIFY_LINKER_FLAGS=-L$(COMPLEXIFY_DIR)/lib -lcomplexify
-
-
-

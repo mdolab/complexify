@@ -152,4 +152,3 @@ subroutine cmplxL2Norm(x_r, x_i, n, l2Norm)
     l2Norm = sqrt(l2Norm)
 
 end subroutine cmplxL2Norm
-
