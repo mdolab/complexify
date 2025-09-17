@@ -22,4 +22,3 @@ Please refer to the :ref:`complexify_api` and  :ref:`complexify_examples` on how
 
     API
     examples
-

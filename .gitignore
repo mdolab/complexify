@@ -1,3 +1,8 @@
+# Ignore ruff and pre-commit config files
+ruff.toml
+.pre-commit-config.yaml
+
+# General
 *.DS_Store
 *__pycache__
 *.egg-info
@@ -6,8 +11,8 @@
 *.so
 *.out
 
-# auto generated files
+# Auto generated files
 config.mk
 
-# compiled tests
+# Compiled tests
 tests/test_complexify

@@ -7,5 +7,3 @@ default:
 
 # Create a library:
 	$(FF90) -shared complexify.o -o libcomplexify.so
-
-
