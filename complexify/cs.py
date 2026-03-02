@@ -5,22 +5,28 @@ Parts are adapted from https://github.com/OpenMDAO/OpenMDAO/blob/master/openmdao
 
 import numpy as np
 
+if np.__version__[0] == "2":
+    NumPy2 = True
+else:
+    NumPy2 = False
+
 
 def abs(x):  # noqa: A001
     """
-    complex-step safe version of numpy.abs function.
+    Complex-step safe version of numpy.abs function.
 
     Parameters
     ----------
     x : ndarray
-        array value to be computed on
+        Array value to be computed on.
 
     Returns
     -------
     ndarray
+        Absolute value.
     """
     if isinstance(x, np.ndarray):
-        return x * np.sign(x)
+        return np.where(x.real < 0.0, -x, x)
     elif x.real < 0.0:
         return -x
     return x
