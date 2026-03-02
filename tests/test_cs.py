@@ -9,11 +9,11 @@ class TestComplexSafe(unittest.TestCase):
     def setUp(self):
         # Generate random arrays with a fixed seed
         np.random.seed(3)
-        self.a = np.random.rand(5)
-        self.b = np.random.rand(5)
+        self.a = 2 * (np.random.rand(5) - 0.5)
+        self.b = 2 * (np.random.rand(5) - 0.5)
 
-        self.hFD = 1e-6
-        self.hCS = 1e-40
+        self.hFD = 1e-8
+        self.hCS = 1e-200
 
         self.aFD = self.a.copy()
         self.aFD[0] += self.hFD
