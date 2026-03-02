@@ -44,6 +44,7 @@ def abs(x):  # noqa: A001
         return -x
     return x
 
+
 def norm(x, axis=None):
     """
     complex-step safe version of numpy.linalg.norm function.
