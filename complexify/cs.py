@@ -5,11 +5,6 @@ Parts are adapted from https://github.com/OpenMDAO/OpenMDAO/blob/master/openmdao
 
 import numpy as np
 
-if np.__version__[0] == "2":
-    NumPy2 = True
-else:
-    NumPy2 = False
-
 
 def abs(x):  # noqa: A001
     """
